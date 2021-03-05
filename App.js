@@ -4,7 +4,6 @@ import { StyleSheet, Text, View } from "react-native";
 import { Provider } from "react-redux";
 
 import Store from "./store/store";
-
 import Stack from "./routes/stackRoutes";
 
 export default function App() {

@@ -14,6 +14,7 @@ import History from "../screens/history";
 import Crypto from "../screens/crypto";
 import Retrait from "../screens/retrait";
 import Profile from "../screens/profile";
+import Depot2ndStep from "../screens/depot2ndStep";
 
 export default function Stack() {
   const Stack = createStackNavigator();
@@ -71,6 +72,11 @@ export default function Stack() {
         <Stack.Screen
           name="Profile"
           component={Profile}
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="Depot2ndStep"
+          component={Depot2ndStep}
           options={{ headerShown: false }}
         ></Stack.Screen>
       </Stack.Navigator>

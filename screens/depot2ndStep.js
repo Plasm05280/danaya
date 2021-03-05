@@ -6,41 +6,51 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  StatusBar,
 } from "react-native";
 
 import ScreenHeader from "../components/screenHeader";
 import TextCard from "../components/TextCard";
 import { connect } from "react-redux";
 import { InputText } from "../components/input";
-import { Button } from "../components/button";
+import { Button, ButtonOffset } from "../components/button";
+
+import Animated from "react-native-reanimated";
 
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import BottomSheet from "reanimated-bottom-sheet";
+import WalletBottomSheet from "../components/walletBottomSheet";
 
 function Depot(props) {
   const WIDTH = Dimensions.get("screen").width;
   const Navigation = useNavigation();
 
-  const dispatchNumber = (number) => {
-    let Action = { type: "SAVE_NUMBER", value: number };
-    props.dispatch(Action);
-  };
+  const sheetRef = React.useRef(null);
 
-  const Navigate = (number) => {
-    if (props.Store.selectedCard == "" || props.Store.phoneNumber == "") {
-      alert("Veuillez Remplir tous les champs");
-    } else {
-      if (props.Store.phoneNumber.length != 8) {
-        alert("Le format de votre numéro est incorrect");
-      } else {
-        Navigation.push("Depot2ndStep");
-      }
+  // console.log(props.Store.selectedCrypto);
+  const [montant, setMontant] = React.useState();
+
+  React.useEffect(() => {
+    if (props.Store.selectedCrypto !== "") {
+      sheetRef.current.snapTo(1);
     }
+  });
+
+  let fall = new Animated.Value(1);
+  const animatedShadowOpacity = Animated.interpolate(fall, {
+    inputRange: [0, 1],
+    outputRange: [0.5, 0],
+  });
+
+  const Wallet = () => {
+    return <WalletBottomSheet></WalletBottomSheet>;
   };
 
-  console.log(props);
   return (
     <View style={styles.container}>
-      <ScreenHeader title="Achats des cryptomonaies"></ScreenHeader>
+      <ScreenHeader title="Wallet"></ScreenHeader>
       <ScrollView
         contentContainerStyle={{
           height: Dimensions.get("window").height - 150,
@@ -49,7 +59,7 @@ function Depot(props) {
       >
         <View style={{ padding: 20, alignItems: "center" }}>
           <Text style={{ fontSize: 15, textAlign: "center" }}>
-            Selectionner votre méthode de payement
+            Selectionner la cryptomonaie
           </Text>
         </View>
         <View
@@ -60,41 +70,26 @@ function Depot(props) {
             flexWrap: "wrap",
           }}
         >
-          <TextCard id="om" type="mobile">
+          <TextCard id="BTC" color="#f7931a" type="crypto">
+            <MaterialCommunityIcons name="bitcoin" size={50} color="#f7931a" />
+          </TextCard>
+          <TextCard id="ETH" color="#568cc4" type="crypto">
+            <MaterialCommunityIcons name="ethereum" size={50} color="#568cc4" />
+          </TextCard>
+          <TextCard id="PM" color="#e33d59" type="crypto">
             <Image
-              source={require("../assets/om.png")}
+              source={require("../assets/perfectmoney.png")}
               resizeMode="contain"
               style={styles.cardImage}
             ></Image>
           </TextCard>
-          <TextCard id="mobicash" type="mobile">
+          <TextCard id="PY" color="#5186bd" type="crypto">
             <Image
-              source={require("../assets/mobicash.png")}
+              source={require("../assets/PAYEER.png")}
               resizeMode="contain"
               style={styles.cardImage}
             ></Image>
           </TextCard>
-        </View>
-        <View style={{ width: "100%", alignItems: "center" }}>
-          <View
-            style={{
-              backgroundColor: "white",
-              padding: 10,
-              elevation: 1,
-              alignItems: "center",
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ marginBottom: 10, fontWeight: "700" }}>
-              Votre numéro de téléphone
-            </Text>
-            <InputText
-              placeholder="Numéro de téléphone"
-              maxLength={8}
-              keyboardType="phone-pad"
-              onChangeText={(number) => dispatchNumber(number)}
-            ></InputText>
-          </View>
         </View>
       </ScrollView>
       <View
@@ -102,9 +97,24 @@ function Depot(props) {
           width: "100%",
           alignItems: "center",
         }}
-      >
-        <Button title="Suivant" onPress={() => Navigate()}></Button>
-      </View>
+      ></View>
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          {
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: "#000",
+            opacity: animatedShadowOpacity,
+          },
+        ]}
+      />
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={[0, 400, 40]}
+        callbackNode={fall}
+        borderRadius={20}
+        renderContent={Wallet}
+      />
     </View>
   );
 }
@@ -112,6 +122,7 @@ function Depot(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    //backgroundColor: "red",
   },
   bottomBar: {
     width: "100%",
@@ -122,7 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   cardImage: {
-    width: 80,
+    width: 200,
     height: 60,
 
     padding: 10,

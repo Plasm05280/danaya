@@ -7,7 +7,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 export function Button(props) {
   return (
     <TouchableOpacity style={styles.Button} {...props}>
-      <Text style={{ fontSize: 17, color: "white" }}>{props.title}</Text>
+      <Text style={{ fontSize: 20, color: "white" }}>{props.title}</Text>
       {props.icon ? (
         <MaterialCommunityIcons
           size={24}

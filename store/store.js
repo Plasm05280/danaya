@@ -1,7 +1,6 @@
 import { createStore, combineReducers } from "redux";
 import Reducer from "./reducer/reducer";
-import Card from "./reducer/card";
+import Pricing from "./reducer/card";
 
-const Combined = combineReducers({ test: Reducer, Card });
-
+const Combined = combineReducers({ Store: Reducer, Pricing });
 export default createStore(Combined);

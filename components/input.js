@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export function InputText(props) {
   const [focus, setFocus] = useState(false);
@@ -10,6 +11,41 @@ export function InputText(props) {
       onBlur={() => setFocus(false)}
       {...props}
     ></TextInput>
+  );
+}
+
+export function InputWithIcon(props) {
+  const [focus, setFocus] = useState(false);
+  return (
+    <View>
+      <TextInput
+        style={focus === true ? styles.inputOnFocus : styles.input}
+        onFocus={() => setFocus(true)}
+        onBlur={() => setFocus(false)}
+        {...props}
+      ></TextInput>
+      {props.icone ? (
+        <MaterialCommunityIcons
+          name={props.icone}
+          size={45}
+          color="#c7c7c7"
+          style={{ position: "absolute", right: 5, top: 5 }}
+        />
+      ) : (
+        <Text
+          style={{
+            position: "absolute",
+            right: 10,
+            top: 15,
+            fontSize: 20,
+            fontWeight: "700",
+            color: "#c7c7c7",
+          }}
+        >
+          {props.text}
+        </Text>
+      )}
+    </View>
   );
 }
 
